@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/myan0527/myan-k8s.git
+    repoURL: https://codeconnections.ap-northeast-1.amazonaws.com/git-http/740625119642/ap-northeast-1/9e4318d4-8c10-47e4-8011-0cbd8af1f960/myan0527/myan-k8s.git
     targetRevision: main
     path: kubernetes/manifests/test-app
   destination:
