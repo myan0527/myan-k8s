@@ -10,7 +10,7 @@ spec:
     targetRevision: main
     path: kubernetes/manifests/test-app
   destination:
-    server: eks-handson
+    server: https://28E6448DFBC26A2AFFD2A62ECE01FA88.gr7.ap-northeast-1.eks.amazonaws.com
     namespace: argocd
   syncPolicy:
     automated:
