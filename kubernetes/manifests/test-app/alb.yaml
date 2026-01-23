@@ -58,7 +58,8 @@ metadata:
   namespace: default
 spec:
   listenerRef:
-    name: test-listener-80
+    from:
+      name: test-listener-80
   priority: 10
   conditions:
     - field: path-pattern
