@@ -13,8 +13,7 @@ spec:
     - subnet-049bdb1f9744ae6ce
     - subnet-0cb1a1108cdb9af85
   securityGroups:
-    - from:
-        name: alb-sg
+    - 
 ---
 apiVersion: elbv2.services.k8s.aws/v1alpha1
 kind: TargetGroup
@@ -73,23 +72,4 @@ spec:
               name: test-tg
             weight: 1
 
----
-apiVersion: ec2.services.k8s.aws/v1alpha1
-kind: SecurityGroup
-metadata:
-  name: alb-sg
-  namespace: default
-spec:
-  name: alb-sg
-  description: "ALB Security Group created by ACK"
-  vpcID: vpc-06fff965e3d6a231f
-  ingressRules:
-    - ipProtocol: tcp
-      fromPort: 80
-      toPort: 80
-      ipRanges:
-        - cidrIP: 124.211.210.121/32
-  egressRules:
-    - ipProtocol: "-1"
-      ipRanges:
-        - cidrIP: 0.0.0.0/0
+
