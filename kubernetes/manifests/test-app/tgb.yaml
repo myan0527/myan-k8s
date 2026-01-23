@@ -1,0 +1,12 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: test-tgb
+  namespace: default
+spec:
+  targetType: ip
+  # TGPのARNを指定
+  targetGroupARN: <arn:aws:elasticloadbalancing:region:acct:targetgroup/...>
+  serviceRef:
+    name: nginx
+    port: 80

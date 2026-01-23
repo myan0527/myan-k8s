@@ -1,0 +1,109 @@
+apiVersion: elbv2.services.k8s.aws/v1alpha1
+kind: LoadBalancer
+metadata:
+  name: test-alb
+  namespace: default
+spec:
+  name: test-alb
+  type: application
+  scheme: internet-facing
+  ipAddressType: ipv4
+  # PublicサブネットのIDを指定
+  subnets:
+    - subnet-049bdb1f9744ae6ce
+    - subnet-0cb1a1108cdb9af85
+  securityGroups:
+    - from:
+        name: alb-sg
+---
+apiVersion: elbv2.services.k8s.aws/v1alpha1
+kind: TargetGroup
+metadata:
+  name: test-tg
+  namespace: default
+spec:
+  name: test-tg
+  targetType: ip
+  protocol: HTTP
+  port: 80
+  vpcID: vpc-06fff965e3d6a231f
+
+  healthCheckProtocol: HTTP
+  healthCheckPath: /
+  healthCheckPort: traffic-port
+---
+apiVersion: elbv2.services.k8s.aws/v1alpha1
+kind: Listener
+metadata:
+  name: test-listener-80
+  namespace: default
+spec:
+  loadBalancerARNRef:
+    name: test-alb
+  port: 80
+  protocol: HTTP
+  defaultActions:
+    - type: fixed-response
+      fixedResponseConfig:
+        statusCode: "404"
+        contentType: text/plain
+        messageBody: "no rule matched"
+---
+apiVersion: elbv2.services.k8s.aws/v1alpha1
+kind: Rule
+metadata:
+  name: test-rule-echo
+  namespace: default
+spec:
+  listenerARNRef:
+    name: test-listener-80
+  priority: 10
+  conditions:
+    - field: path-pattern
+      pathPatternConfig:
+        values:
+          - "/*"
+  actions:
+    - type: forward
+      forwardConfig:
+        targetGroups:
+          - targetGroupARNRef:
+              name: test-tg
+            weight: 1
+
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: alb-sg
+  namespace: default
+spec:
+  name: alb-sg
+  description: "ALB Security Group created by ACK"
+  vpcID: vpc-06fff965e3d6a231f
+  ingressRules:
+    - ipProtocol: tcp
+      fromPort: 80
+      toPort: 80
+      ipRanges:
+        - cidrIP: 124.211.210.121/32
+  egressRules:
+    - ipProtocol: "-1"
+      ipRanges:
+        - cidrIP: 0.0.0.0/0
+
+---
+# EKSのSGにALBのSGからの通信を許可
+
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: SecurityGroupIngress
+metadata:
+  name: allow-alb-to-pod
+  namespace: default
+spec:
+  groupID: eks-cluster-sg-eks-handson-544538237   #EKSのSGのIDを指定
+  ipProtocol: tcp
+  fromPort: 80
+  toPort: 80
+  sourceSecurityGroupIDRef:
+    name: alb-sg
