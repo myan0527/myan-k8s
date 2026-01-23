@@ -13,7 +13,7 @@ spec:
     - subnet-049bdb1f9744ae6ce
     - subnet-0cb1a1108cdb9af85
   securityGroups:
-    - 
+    - sg-09f2acf7a1661db38
 ---
 apiVersion: elbv2.services.k8s.aws/v1alpha1
 kind: TargetGroup
@@ -71,5 +71,3 @@ spec:
           - targetGroupARNRef:
               name: test-tg
             weight: 1
-
-
