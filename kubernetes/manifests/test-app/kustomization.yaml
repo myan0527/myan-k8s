@@ -3,5 +3,5 @@ kind: Kustomization
 
 # 何も適用しない（resources を空にする）
 resources: 
-#  - deployment.yaml
+  - deployment.yaml
   - service.yaml
