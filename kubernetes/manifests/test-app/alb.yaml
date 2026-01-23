@@ -39,8 +39,9 @@ metadata:
   name: test-listener-80
   namespace: default
 spec:
-  loadBalancerARNRef:
-    name: test-alb
+  loadBalancerRef:
+    from:
+      name: test-alb
   port: 80
   protocol: HTTP
   defaultActions:
@@ -68,6 +69,7 @@ spec:
     - type: forward
       forwardConfig:
         targetGroups:
-          - targetGroupARNRef:
-              name: test-tg
+          - targetGroupRef:
+              from:
+                name: test-tg
             weight: 1
