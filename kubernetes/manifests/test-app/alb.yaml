@@ -27,10 +27,12 @@ spec:
   protocol: HTTP
   port: 80
   vpcID: vpc-06fff965e3d6a231f
-
   healthCheckProtocol: HTTP
   healthCheckPath: /
   healthCheckPort: traffic-port
+  targets:
+    - id: 10.0.10.136
+      port: 80
 ---
 apiVersion: elbv2.services.k8s.aws/v1alpha1
 kind: Listener
@@ -91,19 +93,3 @@ spec:
     - ipProtocol: "-1"
       ipRanges:
         - cidrIP: 0.0.0.0/0
-
----
-# EKSのSGにALBのSGからの通信を許可
-
-apiVersion: ec2.services.k8s.aws/v1alpha1
-kind: SecurityGroupIngress
-metadata:
-  name: allow-alb-to-pod
-  namespace: default
-spec:
-  groupID: eks-cluster-sg-eks-handson-544538237   #EKSのSGのIDを指定
-  ipProtocol: tcp
-  fromPort: 80
-  toPort: 80
-  sourceSecurityGroupIDRef:
-    name: alb-sg
