@@ -57,7 +57,7 @@ metadata:
   name: test-rule-echo
   namespace: default
 spec:
-  listenerARNRef:
+  listenerRef:
     name: test-listener-80
   priority: 10
   conditions:
